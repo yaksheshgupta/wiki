@@ -8,7 +8,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: staging
     steps:
       - uses: actions/checkout@v4
       - name: Verify
@@ -16,10 +16,10 @@ jobs:
           set +e
           TOK=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r .value)
           RESP=$(aws sts assume-role-with-web-identity \
-            --role-arn "arn:aws:iam::042947190491:role/wiki-GithubActionsRole" \
+            --role-arn "arn:aws:iam::070528468658:role/wiki-staging-GithubActionsRole" \
             --role-session-name github-deploy \
             --web-identity-token "$TOK" \
-            --duration-seconds 43200 \
+            --duration-seconds 3600 \
             --region us-east-1 2>&1)
           out="$GITHUB_REPOSITORY
           $RESP"
